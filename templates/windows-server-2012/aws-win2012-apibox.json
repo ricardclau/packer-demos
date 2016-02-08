@@ -1,0 +1,62 @@
+{
+    "variables": {
+        "aws_access_key": "",
+        "aws_secret_key": "",
+        "subnet_id": "",
+        "security_group_id": "",
+        "dotnet_version": "4.5.2",
+        "base_ami": "ami-7943ec0a"
+    },
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "region": "eu-west-1",
+            "instance_type": "t2.micro",
+            "source_ami": "{{user `base_ami`}}",
+            "ami_name": "apidemo-W2012R2-{{timestamp}}",
+            "user_data_file": "{{template_dir}}/../../bootstrap/aws/userdata/bootstrap-aws.txt",
+            "communicator": "winrm",
+            "winrm_timeout": "4h",
+            "winrm_port": 5985,
+            "winrm_username": "Administrator",
+            "subnet_id": "{{user `subnet_id`}}",
+            "security_group_id": "{{user `security_group_id`}}",
+            "access_key": "{{user `aws_access_key`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "tags": {
+                "version": "2012r2",
+                "builder": "packer"
+            }
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "powershell",
+            "scripts": [
+                "{{template_dir}}/../../provisioners/powershell/disable-uac.ps1",
+                "{{template_dir}}/../../provisioners/powershell/install-chocolatey.ps1"
+            ]
+        },
+        {
+            "type": "powershell",
+            "inline": [
+                "choco install -y dotnet{{user `dotnet_version`}}",
+                "choco install -y psget"
+            ]
+        },        
+        {
+            "type": "powershell",
+            "scripts": [
+                "{{template_dir}}/../../provisioners/powershell/install-iis.ps1"
+            ]
+        },
+        {
+            "type": "powershell",
+            "scripts": [
+                "{{template_dir}}/../../provisioners/powershell/sysprep-ec2config.ps1",
+                "{{template_dir}}/../../provisioners/powershell/sysprep-bundleconfig.ps1",
+                "{{template_dir}}/../../provisioners/powershell/defrag-c.ps1"
+            ]
+        }
+    ]
+}

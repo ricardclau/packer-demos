@@ -1,0 +1,5 @@
+# VmWare output
+output-vmware*
+
+# Packer ISO download cache
+packer_cache/
