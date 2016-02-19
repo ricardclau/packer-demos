@@ -13,7 +13,7 @@
             "region": "eu-west-1",
             "instance_type": "t2.micro",
             "source_ami": "{{user `base_ami`}}",
-            "ami_name": "servicedemo-W2012R2-{{timestamp}}",
+            "ami_name": "apidemo-W2012R2-{{timestamp}}",
             "user_data_file": "{{template_dir}}/../../bootstrap/aws/userdata/bootstrap-aws.txt",
             "communicator": "winrm",
             "winrm_timeout": "4h",
@@ -41,9 +41,17 @@
             "type": "powershell",
             "inline": [
                 "choco install -y dotnet{{user `dotnet_version`}}",
-                "choco install -y psget"
+                "choco install -y psget",
+                "Add-WindowsFeature telnet-client -Verbose",
+                "Add-WindowsFeature SNMP-Service -Verbose"
             ]
-        },
+        },        
+        {
+            "type": "powershell",
+            "scripts": [
+                "{{template_dir}}/../../provisioners/powershell/install-iis.ps1"
+            ]
+        },        
         {
             "type": "powershell",
             "scripts": [

@@ -16,4 +16,8 @@ $features = @(
    "NET-Framework-45-ASPNET"
 )
 Add-WindowsFeature $features -Verbose
+
+Write-Host "Opening port 80..."
+netsh advfirewall firewall add rule name="open_80_api" dir=in localport=80 protocol=TCP action=allow
+
 choco install -y webdeploy
