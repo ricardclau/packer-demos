@@ -1,0 +1,5 @@
+---
+# The repo/ppa that this role is designed to work with
+java8_java_repo: "ppa:openjdk-r/ppa"
+# As above. Choose openjdk-8, openjdk-7 etc - from 6 to 9
+java8_java_package: "openjdk-8-jre"

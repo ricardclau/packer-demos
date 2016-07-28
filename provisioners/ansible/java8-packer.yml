@@ -1,0 +1,10 @@
+---
+- name: Java8 install
+  hosts: all
+  become: True
+  become_method: sudo
+  become_user: root
+  remote_user: vagrant
+
+  roles:
+    - java8

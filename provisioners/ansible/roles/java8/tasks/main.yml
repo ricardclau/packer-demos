@@ -1,0 +1,12 @@
+---
+- name: Configure Java PPA
+  apt_repository:
+    repo: "{{ java8_java_repo }}"
+    state: present
+    update_cache: yes
+
+- name: Install Java
+  apt: 
+    name: "{{ java8_java_package }}"
+    state: present 
+    update_cache: yes
